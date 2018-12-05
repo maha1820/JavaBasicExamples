@@ -1,0 +1,18 @@
+Multipart file for patch call:
+_______________________________
+
+@Bean(name = "multipartResolver")
+    public MultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver() {
+            @Override
+            public boolean isMultipart(HttpServletRequest request) {
+                String method = request.getMethod().toLowerCase();
+                //By default, only POST is allowed. Since this is an 'update' we should accept patch.
+                if (!Arrays.asList("patch", "post").contains(method)) {
+                    return false;
+                }
+                String contentType = request.getContentType();
+                return (contentType != null &&contentType.toLowerCase().startsWith("multipart/"));
+            }
+        };
+    }
